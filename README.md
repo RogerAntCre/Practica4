@@ -37,11 +37,6 @@ sync_binlog=1
 # El formato de fila es el más detallado y se utiliza para la replicación de datos en tiempo real.
 binlog_format=row
 
-# Especifica la base de datos que se registrará en el registro binario.
-# Solo las transacciones que involucren a esta base de datos se registrarán en el registro binario.
-# Cambie "mydb" por el nombre de la base de datos que desea registrar.
-binlog_do_db=mydb
-
 # Especifica el nombre o dirección IP del servidor MySQL para que los esclavos de replicación puedan conectarse.
 # Es necesario especificar esto si se utiliza la replicación maestro-esclavo.
 # Para el ejemplo se conecta al segundo nodo
@@ -66,11 +61,6 @@ sync_binlog=1
 # Establece el formato de registro binario que se utilizará en el servidor MySQL.
 # El formato de fila es el más detallado y se utiliza para la replicación de datos en tiempo real.
 binlog_format=row
-
-# Especifica la base de datos que se registrará en el registro binario.
-# Solo las transacciones que involucren a esta base de datos se registrarán en el registro binario.
-# Cambie "mydb" por el nombre de la base de datos que desea registrar.
-binlog_do_db=mydb
 
 # Especifica el nombre o dirección IP del servidor MySQL para que los esclavos de replicación puedan conectarse.
 # Es necesario especificar esto si se utiliza la replicación maestro-esclavo.
@@ -140,6 +130,19 @@ START SLAVE;
 ```
 
 Reemplaza `mysqld-bin.000002` y `771` con los valores de "File" y "Position" obtenidos en el paso 5.
+
+Para verificar que todo este bien:
+
+```sql
+SHOW SLAVE STATUS \G
+```
+Deben verificar que los mensajes de Error estén vacios:
+
+```
+                    Last_Errno: 0
+                    Last_Error: 
+```
+ Si no existe errores en el nodo `mariadb-master1` cree una Base de datos y verifique como se replica.
 
 7.  Repite los pasos 5 y 6, pero esta vez conectándote al segundo contenedor primero y luego al primero, para configurar
 

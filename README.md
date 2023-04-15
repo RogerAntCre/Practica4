@@ -160,7 +160,49 @@ Para provar la implementación sigue los siguientes pasos.
 7. Inicia el contenedor `mariadb-master2`, verifica como las modificaciones se propagaron.
 
 ## Conectando dede un cliente.
+Vamos a crear una App Python que lea del Cluster de BBDD.
 
+Para crear un programa en Python que lea todos los libros de la tabla en una base de datos MariaDB, primero necesitamos instalar el paquete `mysql-connector-python` que nos permite conectarnos a la base de datos. Puedes instalarlo usando el siguiente comando en la terminal:
+
+```bash
+pip install mysql-connector-python
+
+```
+
+Luego, puedes utilizar el siguiente código Python para conectarte a la base de datos y leer todos los libros de la tabla `book`:
+
+```python
+import mysql.connector
+
+# Conectar a la base de datos
+db = mysql.connector.connect(
+  host="localhost",
+  port="3310",
+  user="root",
+  password="123456",
+  database="mydb"
+)
+
+# Crear un cursor para ejecutar consultas SQL
+cursor = db.cursor()
+
+# Ejecutar una consulta SQL para obtener todos los libros
+cursor.execute("SELECT * FROM book")
+
+# Obtener todos los resultados y mostrarlos en pantalla
+books = cursor.fetchall()
+for book in books:
+  print("Book ID:", book[0])
+  print("Name:", book[1])
+  print("Release Date:", book[2])
+  print("Quantity:", book[3])
+  print("Price:", book[4])
+
+# Cerrar la conexión y el cursor
+cursor.close()
+db.close()
+
+```
 
 ## Implementando Alta Disponibilidad desde el cliente con HA Proxy.
 
@@ -191,6 +233,7 @@ backend mariadb_backend
   balance roundrobin
   server mariadb-master1 mariadb-master1:3306 check
   server mariadb-master2 mariadb-master2:3306 check
+
 ```
 
 7.  Iniciar el contenedor de HAProxy: Ejecuta el siguiente comando en el directorio donde se encuentra el archivo `haproxy.cfg`:
